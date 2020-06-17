@@ -5,12 +5,20 @@ namespace Bordieris\OAuth2\Client\Provider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class FreelancerProvider extends AbstractProvider
 {
-    use BearerAuthorizationTrait;
+    /**
+     * Returns authorization headers for the 'bearer' grant.
+     *
+     * @param  AccessTokenInterface|string|null $token Either a string or an access token instance
+     * @return array
+     */
+    protected function getAuthorizationHeaders($token = null)
+    {
+        return ['freelancer-oauth-v1:' =>  $token];
+    }
 
     public function getBaseAuthorizationUrl()
     {

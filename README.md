@@ -21,7 +21,7 @@ $provider = new Bordieris\OAuth2\Client\Provider\FreelancerProvider([
 
 $accessToken = $provider->getAccessToken('authorization_code', [
 	'code' => $_GET['code'],
-	'scope' => ['user','browse'] // optional, defaults to ['user']
+	'scope' => ['basic', 'fln:project_create', 'fln:project_manage'] // optional, defaults to ['basic']
 ]);
 $actualToken = $accessToken->getToken();
 $refreshToken = $accessToken->getRefresh();
