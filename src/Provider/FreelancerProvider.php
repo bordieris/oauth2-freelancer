@@ -27,6 +27,46 @@ class FreelancerProvider extends AbstractProvider
         return 'https://accounts.freelancer.com/oauth/authorize';
     }
 
+    /**
+     * Returns authorization parameters based on provided options.
+     *
+     * @param  array $options
+     * @return array Authorization parameters
+     */
+    protected function getAuthorizationParameters(array $options)
+    {
+        if (empty($options['state'])) {
+            $options['state'] = $this->getRandomState();
+        }
+
+        if (empty($options['scope'])) {
+            $options['scope'] = $this->getDefaultScopes();
+        }
+
+        $options += [
+            'response_type'   => 'code',
+            'prompt' => 'select_account consent'
+        ];
+
+        if (is_array($options['scope'])) {
+            $separator = $this->getScopeSeparator();
+            $options['scope'] = implode($separator, $options['scope']);
+        }
+
+        // Store the state as it may need to be accessed later on.
+        $this->state = $options['state'];
+
+        // Business code layer might set a different redirect_uri parameter
+        // depending on the context, leave it as-is
+        if (!isset($options['redirect_uri'])) {
+            $options['redirect_uri'] = $this->redirectUri;
+        }
+
+        $options['client_id'] = $this->clientId;
+
+        return $options;
+    }
+
     public function getBaseAccessTokenUrl(array $params)
     {
         return 'https://accounts.freelancer.com/oauth/token';
