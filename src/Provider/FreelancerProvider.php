@@ -17,7 +17,9 @@ class FreelancerProvider extends AbstractProvider
      */
     protected function getAuthorizationHeaders($token = null)
     {
-        return ['freelancer-oauth-v1:' =>  $token];
+        if($token instanceof AccessToken)
+            $token = $token->getToken();
+        return ['freelancer-oauth-v1' =>  $token];
     }
 
     public function getBaseAuthorizationUrl()
