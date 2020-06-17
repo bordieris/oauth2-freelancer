@@ -21,7 +21,7 @@ class FreelancerResourceOwner implements ResourceOwnerInterface
      */
     public function __construct(array $response)
     {
-        $this->response = $response;
+        $this->response = $response['result'];
     }
 
     /**
@@ -31,7 +31,7 @@ class FreelancerResourceOwner implements ResourceOwnerInterface
      */
     public function getId()
     {
-        return $this->getValueByKey($this->response, 'userid');
+        return $this->getValueByKey($this->response, 'id');
     }
 
     /**
@@ -45,32 +45,28 @@ class FreelancerResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Returns the URL for the user's icon
-     * Always ends with "?n" where n is a cache-busting number incremented after each avatar change
+     * Returns the country name
      *
      * @return string
      */
-    public function getIcon()
+    public function getCountryName()
     {
-        return $this->getValueByKey($this->response, 'usericon');
+        $location = $this->getValueByKey($this->response, 'location');
+        $country = $this->getValueByKey($location, 'country');
+        return $this->getValueByKey($country, 'name');
     }
 
     /**
-     * Returns the user's "type"
+     * Returns the user's "role"
      * Known values are:
-     *  - banned (used for deactivated accounts too)
-     *  - regular
-     *  - premium, hell-premium
-     *  - beta, hell-beta
-     *  - senior
-     *  - volunteer
-     *  - admin
+     *  - freelancer
+     *  - employer
      *
      * @return string
      */
-    public function getType()
+    public function getRole()
     {
-        return $this->getValueByKey($this->response, 'type');
+        return $this->getValueByKey($this->response, 'role');
     }
 
     public function toArray()
